@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">kakao_practice</string>
+    <string name="kakao_app_key">aa12f296a6083fe9e4d51d3a000aab13</string>
+    <string name="kakao_native_key">kakaoaa12f296a6083fe9e4d51d3a000aab13</string>
+</resources>
