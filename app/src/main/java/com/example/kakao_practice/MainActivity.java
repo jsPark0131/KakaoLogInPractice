@@ -5,14 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.kakao.auth.AuthType;
 import com.kakao.auth.Session;
+import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
 
 public class MainActivity extends AppCompatActivity {
     private Button btn_custom_login;
@@ -27,28 +31,44 @@ public class MainActivity extends AppCompatActivity {
         btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
         btn_custom_login_out = (Button) findViewById(R.id.btn_custom_login_out);
 
+
+        if (Session.getCurrentSession().checkAndImplicitOpen()) {
+            UserManagement.getInstance().me(new MeV2ResponseCallback() {
+                @Override
+                public void onSuccess(MeV2Response result) {
+                    Log.e("###", "kakao automatic log in");
+                    Intent intent = new Intent(MainActivity.this, NextActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                @Override
+                public void onSessionClosed(ErrorResult errorResult) {
+                }
+            });
+        }
+
         session = Session.getCurrentSession();
         session.addCallback(sessionCallback);
 
-        btn_custom_login.setOnClickListener(new View.OnClickListener() {
+       /* btn_custom_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 session.open(AuthType.KAKAO_LOGIN_ALL, MainActivity.this);
             }
-        });
+        });*/
 
-        btn_custom_login_out.setOnClickListener(new View.OnClickListener() {
+        /*btn_custom_login_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserManagement.getInstance()
                         .requestLogout(new LogoutResponseCallback() {
                             @Override
                             public void onCompleteLogout() {
-                                Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+                                Log.e("###", "logout");
                             }
                         });
             }
-        });
+        });*/
     }
 
     @Override
